@@ -1,20 +1,13 @@
 from MachineLearningModel import MachineLearningModel
 import numpy as np
 # https://medium.com/analytics-vidhya/coding-logistic-regression-in-python-from-scratch-57284dcbfbff
-def __init__(self, learning_rate=0.01, num_iterations=1000, epsilon= 1e-15) -> None:
-        self.learning_rate = learning_rate
-        self.num_iterations = num_iterations
+#https://medium.com/@stanweer/implementing-logistic-regression-algorithm-from-scratch-in-python-95b4d6874312
+def __init__(self, lr=0.01, epochs=1000, epsilon= 1e-15):
+        self.lr = lr
+        self.epochs = epochs
         self.epsilon = epsilon
         self.theta = np.ndarray
         self.cost_history = []
-        """
-        Initialize the logistic regression model.
-
-        Parameters:
-        learning_rate (float): The learning rate for gradient descent.
-        num_iterations (int): The number of iterations for gradient descent.
-        """
-        #--- Write your code here ---#
 
 def fit(self, X, y):
     """
@@ -32,17 +25,16 @@ def fit(self, X, y):
 
     """
 
-    #--- Write your code here ---#
-
-    X, y = self._check_shapes(X, y)
-    m, n = X.shape
-    X_b = np.hstack((np.ones((m + 1)), X))
+    X_arr, y_arr = self._check_shapes(X, y)
+    m, n = X_arr.shape
+    X_b = np.hstack((np.ones((m + 1)), X_arr))
     self.theta = np.zeros(n + 1)
-
-    for _ in range(self.num_iterations):
-        h    = self._sigmoid(np.matmul(X_b, self.theta))
+    self.cost_history = []
+    for _ in range(self.epochs):
+        z = X_b.dot(self.theta)
+        h = self._sigmoid(np.matmul(X_b, self.theta))
         grad = (1.0 / m) * np.matmul(X_b.T, (h - y))
-        self.theta -= self.learning_rate * grad
+        self.theta -= self.lr * grad
         self.cost_history.append(self._cost_function(X_b, y))
 
                                                                         
