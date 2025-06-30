@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from MachineLearningModel import MachineLearningModel
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 
 class RegressionModelGradientDescent(MachineLearningModel):
     """
