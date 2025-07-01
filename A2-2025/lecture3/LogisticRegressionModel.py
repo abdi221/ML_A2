@@ -32,15 +32,16 @@ class LogisticRegressionModel(MachineLearningModel):
         X_b = np.hstack((np.ones((m + 1)), X_arr))
         self.theta = np.zeros(n + 1)
         self.cost_history = []
-        for _ in range(self.epochs):
-            z = X_b.dot(self.theta)
-            h = self._sigmoid(np.matmul(X_b, self.theta))
-            grad = (1.0 / m) * np.matmul(X_b.T, (h - y))
-            self.theta -= self.lr * grad
-            self.cost_history.append(self._cost_function(X_b, y))
-
+        #for gradient decent
+        for _ in range(self.num_iterations):
+                    z = X_b.dot(self.theta)
+                    h = self._sigmoid(z)
+                    grad = (1.0 / m) * X_b.T.dot(h - y_arr)
+                    self.theta -= self.learning_rate * grad
+                    cost = self._cost_function(X_b, y_arr)
+                    self.cost_history.append(cost)
                                                                             
-    def predict(self, X: np.ndarray, threshold: float = 0.5, return_proba: bool = False) -> np.ndarray:
+    def predict(self, X: np.ndarray, threshold: float = 0.5, return_proba = False):
             
         """
         Make predictions using the trained logistic regression model.
@@ -54,8 +55,10 @@ class LogisticRegressionModel(MachineLearningModel):
         #--- Write your code here ---#
         X_b = self._add_bias(X)
         proba = self._sigmoid(np.matmul(X_b, self.theta))
-        return proba if return_proba else (proba >= threshold).astype(int)
-
+        if return_proba:
+              return proba
+        return (proba >= threshold).astype(int)
+    
 
     def evaluate(self, X, y):
         """
@@ -69,9 +72,10 @@ class LogisticRegressionModel(MachineLearningModel):
         score (float): Evaluation score (e.g., accuracy).
         """
         #--- Write your code here ---#
-        X, y   = self._check_shapes(X, y)
-        preds  = self.predict(X)
-        return (preds == y).mean()
+        x_arr, y_arr   = self._check_shapes(X, y)
+        preds  = self.predict(x_arr)
+        return np.mean(preds == y_arr)
+    
 
 
     def _sigmoid(self, z):
@@ -85,8 +89,9 @@ class LogisticRegressionModel(MachineLearningModel):
         result (array-like): Output of the sigmoid function.
         """
         #--- Write your code here ---#
+        return 1.0 / (1.0 + np.exp(-z))
 
-    def _cost_function(self, X, y):
+    def _cost_function(self, X_b, y_arr):
         """
         Compute the logistic regression cost function.
 
@@ -98,3 +103,27 @@ class LogisticRegressionModel(MachineLearningModel):
         cost (float): The logistic regression cost.
         """
         #--- Write your code here ---#
+        m = y_arr.size
+        z = X_b.dot(self.theta)
+        h = self._sigmoid(z)
+        #avoid log(0)
+        h = np.clip(h, self.epsilon, 1-self.epsilon)
+        cost = -(1.0 /m) * (y_arr.dot(np.log(h)) + (1 - y_arr).dot(np.log(1 - h)))
+        return cost
+    
+
+    def add_bias(self, X_arr):
+          m = X_arr.shape[0]
+          return np.hstack([np.ones((m, 1), X_arr)])
+    
+    def check_shapes(self, X, y):
+
+        X_arr = np.array(X)
+        y_arr = np.array(y).reshape(-1)
+        if X_arr.ndim() != 2:
+            raise ValueError(f"X must be 2D, got shape {X_arr.shape}")
+        if X_arr.ndim != 1:
+            raise ValueError(f"y must be 1D shaped, got {y_arr.shape}")
+        return X_arr, y_arr
+    
+    
