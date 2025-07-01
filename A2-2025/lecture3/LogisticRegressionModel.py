@@ -4,8 +4,8 @@ import numpy as np
 class LogisticRegressionModel(MachineLearningModel):
     # https://medium.com/analytics-vidhya/coding-logistic-regression-in-python-from-scratch-57284dcbfbff
     #https://medium.com/@stanweer/implementing-logistic-regression-algorithm-from-scratch-in-python-95b4d6874312
-    def __init__(self, lr=0.01, num_iterations=1000, epsilon= 1e-15):
-            self.lr = lr
+    def __init__(self, learning_rate=0.01, num_iterations=1000, epsilon= 1e-15):
+            self.lr = learning_rate
             self.num_iterations = num_iterations
             self.epsilon = epsilon
             self.theta = np.ndarray
@@ -29,7 +29,7 @@ class LogisticRegressionModel(MachineLearningModel):
 
         X_arr, y_arr = self._check_shapes(X, y)
         m, n = X_arr.shape
-        X_b = np.hstack((np.ones((m + 1)), X_arr))
+        X_b = np.hstack([ np.ones((m,1)), X_arr ])
         self.theta = np.zeros(n + 1)
         self.cost_history = []
         #for gradient decent
@@ -116,14 +116,12 @@ class LogisticRegressionModel(MachineLearningModel):
           m = X_arr.shape[0]
           return np.hstack([np.ones((m, 1), X_arr)])
     
-    def check_shapes(self, X, y):
-
+    def _check_shapes(self, X, y):
         X_arr = np.array(X)
         y_arr = np.array(y).reshape(-1)
-        if X_arr.ndim() != 2:
+        if X_arr.ndim != 2:
             raise ValueError(f"X must be 2D, got shape {X_arr.shape}")
-        if X_arr.ndim != 1:
+        if y_arr.ndim != 1:
             raise ValueError(f"y must be 1D shaped, got {y_arr.shape}")
         return X_arr, y_arr
-    
-    
+
