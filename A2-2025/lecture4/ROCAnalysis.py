@@ -1,3 +1,5 @@
+import numpy as np
+
 class ROCAnalysis:
     """
     Class to calculate various metrics for Receiver Operating Characteristic (ROC) analysis.
@@ -19,7 +21,18 @@ class ROCAnalysis:
             y_predicted (list): Predicted labels (0 or 1).
             y_true (list): True labels (0 or 1).
         """
-        #--- Write your code here ---#
+        self.y_pred = np.asarray(y_predicted, dtype=int).ravel()
+        self.y_true = np.asarray(y_true, dtype=int).ravel()
+
+        if self.y_pred.shape != self.y_true.shape:
+            raise ValueError(f"predicted and true must have the same shape, \n" 
+                             f"got {self.y_pred.shape} vs {self.y_true.shape}")
+        
+        #confusion matrix entries
+        self.tp = int(np.sum((self.y_pred == 1) & (self.y_true == 1)))
+        self.tp = int(np.sum((self.y_pred == 0) & (self.y_true == 0)))
+        self.tp = int(np.sum((self.y_pred == 1) & (self.y_true == 0)))
+        self.tp = int(np.sum((self.y_pred == 0) & (self.y_true == 1)))
 
     def tp_rate(self):
         """
@@ -29,6 +42,9 @@ class ROCAnalysis:
             float: True Positive Rate.
         """
         #--- Write your code here ---#
+        denom = self.tp + self.fn
+        return self.tp/denom if denom > 0 else 0.0
+    
 
     def fp_rate(self):
         """
@@ -38,7 +54,9 @@ class ROCAnalysis:
             float: False Positive Rate.
         """
         #--- Write your code here ---#
-
+        denom = self.fp + self.tn
+        return self.fp / denom if denom > 0 else 0.0
+    
     def precision(self):
         """
         Calculate Precision.
@@ -47,6 +65,8 @@ class ROCAnalysis:
             float: Precision.
         """
         #--- Write your code here ---#
+        denom = self.tp + self.fp
+        return self.tp / denom if denom > 0 else 0.0
   
     def f_score(self, beta=1):
         """
