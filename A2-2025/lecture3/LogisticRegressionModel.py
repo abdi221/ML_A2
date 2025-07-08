@@ -5,7 +5,7 @@ class LogisticRegressionModel(MachineLearningModel):
     # https://medium.com/analytics-vidhya/coding-logistic-regression-in-python-from-scratch-57284dcbfbff
     #https://medium.com/@stanweer/implementing-logistic-regression-algorithm-from-scratch-in-python-95b4d6874312
     def __init__(self, learning_rate=0.01, num_iterations=1000, epsilon= 1e-15):
-            self.lr = learning_rate
+            self.learning_rate = learning_rate
             self.num_iterations = num_iterations
             self.epsilon = epsilon
             self.theta = np.ndarray
@@ -112,13 +112,13 @@ class LogisticRegressionModel(MachineLearningModel):
         return cost
     
 
-    def add_bias(self, X_arr):
+    def _add_bias(self, X_arr):
           m = X_arr.shape[0]
-          return np.hstack([np.ones((m, 1), X_arr)])
+          return np.hstack([np.ones((m, 1)), X_arr])
     
     def _check_shapes(self, X, y):
-        X_arr = np.array(X)
-        y_arr = np.array(y).reshape(-1)
+        X_arr = np.asarray(X, dtype=float)
+        y_arr = np.asarray(y, dtype=int).reshape(-1)
         if X_arr.ndim != 2:
             raise ValueError(f"X must be 2D, got shape {X_arr.shape}")
         if y_arr.ndim != 1:
