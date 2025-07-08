@@ -105,7 +105,7 @@ class NonLinearLogisticRegressionModel(MachineLearningModel):
         #--- Write your code here ---#
         return 1.0 / (1.0 + np.exp(-z))
     #https://numpy.org/doc/2.2/reference/generated/numpy.vstack.html
-    def mapFeature(self, X1, X2, D):
+    def mapFeature(self, X1, X2):
         """
         Map the features to a higher-dimensional space using polynomial features.
         Check the slides to have hints on how to implement this function.
