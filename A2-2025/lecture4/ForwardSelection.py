@@ -87,6 +87,29 @@ class ForwardSelection:
         Performs forward feature selection based on maximizing the F-score.
         """
         #--- Write your code here ---#
+        remaining = set(range(self.n_features))
+
+        #start from no features 
+        while remaining:
+            best_feat = None
+            best_score = self.best_cost
+
+
+            #try adding each remaining feat
+            for feat in remaining:
+                trial = self.selected_features + [feat]
+                score = self.train_model_with_features(trial)
+                if score > best_score:
+                    best_score = score
+                    best_feat = feat
+            
+            #if it finds an improvement, it should fix that feature and continue
+            if best_feat is not None:
+                self.selected_features.append(best_feat)
+                remaining.remove(best_feat)
+                self.best_score = best_score
+            else:
+                break # no further gain
                 
     def fit(self):
         """
