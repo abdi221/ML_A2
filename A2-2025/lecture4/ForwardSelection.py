@@ -37,7 +37,7 @@ class ForwardSelection:
 
 
 
-    def create_split(self, X, y):
+    def create_split(self, X, y, random_state=None):
         """
         Creates a train-test split of the data.
 
@@ -52,6 +52,12 @@ class ForwardSelection:
             y_test (array-like): Target labels for testing.
         """
         #--- Write your code here ---#
+        rng = np.random.RandomState(random_state)
+        idx = rng.permutation(self.n_samples)
+        cut = int(0.8*self.n_samples)
+        train_idx, tst_idx = idx[:cut], idx[cut:]
+        return X[train_idx], X[tst_idx], y[train_idx], y[tst_idx]
+    
 
     def train_model_with_features(self, features):
         """
