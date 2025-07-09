@@ -70,6 +70,17 @@ class ForwardSelection:
             float: F-score obtained by evaluating the model.
         """
         #--- Write your code here ---#
+        #subset feattures 
+        Xtr = self.X_train[:, features]
+        Xte = self.X_tst[:, features]
+
+        #fit and predct 
+        self.model.fit(Xtr, self.y_train)
+        y_pred = self.model.predict(Xte)
+        
+        # evaluate
+        roc = ROCAnalysis(self.y_tst, y_pred)
+        return roc.f_score()
 
     def forward_selection(self):
         """
