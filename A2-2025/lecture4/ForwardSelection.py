@@ -1,5 +1,5 @@
 import numpy as np
-from ROCAnalysis import ROCAnalysis
+from lecture4.ROCAnalysis import ROCAnalysis
 
 class ForwardSelection:
     """
@@ -13,7 +13,7 @@ class ForwardSelection:
         best_cost (float): Best F-score achieved during feature selection.
     """
 
-    def __init__(self, X, y, model):
+    def __init__(self, X, y, model, random_state=None):
         """
         Initializes the ForwardSelection object.
 
@@ -23,6 +23,19 @@ class ForwardSelection:
             model (object): Machine learning model with `fit` and `predict` methods.
         """
         #--- Write your code here ---#
+        self.X  = X
+        self.y = y
+        self.model = model
+        self.n_samples, self.n_features = X.shape
+
+        #to keep track of selection
+        self.selected_features = []
+        self.best_score = 0.0
+
+        #creat eone internal split for all evaluations
+        self.X_train, self.X_tst, self.y_train, self.y_tst = self.create_split(X, y, random_state=None)
+
+
 
     def create_split(self, X, y):
         """
