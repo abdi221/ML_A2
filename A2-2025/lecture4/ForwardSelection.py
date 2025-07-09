@@ -117,6 +117,13 @@ class ForwardSelection:
         """
         #--- Write your code here ---#
 
+        #find the best subset
+        self.forward_selection()
+
+        # final fit on full data
+        X_sel = self.X[:, self.selected_features]
+        self.model.fit(X_sel, self.y)
+
     def predict(self, X_test):
         """
         Predicts the target labels for the given test features.
@@ -128,3 +135,6 @@ class ForwardSelection:
             array-like: Predicted target labels.
         """
         #--- Write your code here ---#
+
+        X_sel = X_test[:, self.selected_features]
+        return self.model.predict(X_sel)
